@@ -37,7 +37,8 @@ const mk = (label, data, color) => ({
   pointRadius: 3.5, pointBackgroundColor: color, borderWidth: 2
 });
 
-const trendChart = new Chart(document.getElementById("trend"), {
+let trendChart = null;
+try { trendChart = new Chart(document.getElementById("trend"), {
   type: "line",
   data: { labels: base7.labels, datasets: [mk("Total Collected", base7.total, GREEN), mk("Formal Channelized", base7.formal, BLUE), mk("Recycled", base7.recycled, PURPLE)] },
   options: {
@@ -45,13 +46,14 @@ const trendChart = new Chart(document.getElementById("trend"), {
     plugins: { legend: { display: false } },
     scales: { y: { beginAtZero: true, grid: { color: "#eef3f0" }, ticks: { callback: (v) => v.toLocaleString("en-IN") } }, x: { grid: { display: false } } }
   }
-});
+}); } catch (e) { console.warn("Chart.js not loaded", e); }
 
 document.getElementById("range").addEventListener("click", (e) => {
   const b = e.target.closest("button"); if (!b) return;
   document.querySelectorAll("#range button").forEach((x) => x.classList.remove("on"));
   b.classList.add("on");
   const s = series(+b.dataset.d);
+  if (!trendChart) return;
   trendChart.data.labels = s.labels;
   trendChart.data.datasets[0].data = s.total;
   trendChart.data.datasets[1].data = s.formal;
@@ -66,7 +68,7 @@ const mat = [
 ];
 const totalKg = mat.reduce((s, m) => s + m[1], 0);
 
-new Chart(document.getElementById("donut"), {
+try { new Chart(document.getElementById("donut"), {
   type: "doughnut",
   data: { labels: mat.map((m) => m[0]), datasets: [{ data: mat.map((m) => m[1]), backgroundColor: mat.map((m) => m[2]), borderWidth: 2, borderColor: "#fff" }] },
   options: { cutout: "66%", responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } },
@@ -80,13 +82,14 @@ new Chart(document.getElementById("donut"), {
       ctx.restore();
     }
   }]
-});
+}); } catch (e) { console.warn("Donut not drawn", e); }
 
 document.getElementById("dl").innerHTML = mat.map((m) =>
   `<li><i style="background:${m[2]}"></i><b>${m[0]}</b><span>${m[1].toLocaleString("en-IN")} kg (${(m[1] / totalKg * 100).toFixed(1)}%)</span></li>`
 ).join("");
 
 /* ---------- Map (Leaflet + OpenStreetMap) ---------- */
+try {
 const map = L.map("map", { zoomControl: true, attributionControl: false }).setView([16.72, 74.35], 9);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18 }).addTo(map);
 const risk = { Low: "#1f9d5b", Medium: "#f5a623", High: "#e0475b" };
@@ -100,6 +103,7 @@ const risk = { Low: "#1f9d5b", Medium: "#f5a623", High: "#e0475b" };
   L.circleMarker([la, lo], { radius: 7, color: "#fff", weight: 2, fillColor: risk[r], fillOpacity: 1 })
     .bindTooltip(`${n} – ${r} risk`).addTo(map)
 );
+} catch (e) { console.warn("Leaflet not loaded", e); document.getElementById("map").textContent = "Map could not load (check internet)."; }
 
 /* ---------- Transactions ---------- */
 function renderTx(filter = "") {

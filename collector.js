@@ -8,7 +8,9 @@ const COND = { Good: 1, Fair: 0.93, Poor: 0.85 };
 /* ---------- static icons ---------- */
 $("logo").innerHTML = icon("leaf", 22);
 $("badgeIco").innerHTML = icon("user", 26);
+$("i0").innerHTML = icon("user", 20);
 $("i1").innerHTML = icon("info", 18);
+$("sellBtn").innerHTML = icon("camera", 20) + " Sell E-Waste";
 $("galleryBtn").innerHTML = icon("image", 22);
 $("shutterBtn").innerHTML = icon("camera", 28);
 $("flashBtn").innerHTML = icon("bolt", 22);
@@ -42,7 +44,7 @@ const matBadge = (k) => `<span class="mat-ico">${MATERIALS[k].short.slice(0, 4)}
 
 /* ---------- navigation ---------- */
 function go(n) {
-  state.step = Math.max(1, Math.min(9, n));
+  state.step = Math.max(0, Math.min(9, n));
   document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("show", +s.dataset.step === state.step));
   document.querySelectorAll("#steps li").forEach((li, i) => {
     li.classList.toggle("on", i + 1 === Math.min(state.step, 8));
@@ -56,6 +58,20 @@ document.querySelectorAll("[data-back]").forEach((b) => b.addEventListener("clic
 
 /* ---------- renderers ---------- */
 const render = {
+  0() {
+    const tx = loadUserTx();
+    const kg = tx.reduce((a, t) => a + Number(t.kg || 0), 0);
+    const earn = tx.reduce((a, t) => a + Number(t.amount || 0), 0);
+    $("h_earn").textContent = inr(earn);
+    $("h_kg").textContent = kg.toFixed(1);
+    $("h_lots").textContent = tx.length;
+    $("h_prices").innerHTML = Object.values(MATERIALS).map((m) =>
+      `<div class="kv"><span>${m.short}</span><b>${inr(m.min)} – ${inr(m.max)} <em class="${m.change >= 0 ? "up" : "dn"}">${m.change >= 0 ? "▲" : "▼"} ${Math.abs(m.change)}%</em></b></div>`).join("");
+    $("h_lots_list").innerHTML = tx.length
+      ? tx.slice(0, 5).map((t) => `<div class="lot"><div><b>${t.material} · ${Number(t.kg).toFixed(1)} kg</b><small>${t.lot} · ${t.date}</small></div><div class="amt">${t.amount ? inr(t.amount) : ""}<span class="pill Completed">${t.status}</span></div></div>`).join("")
+      : `<div class="empty">No lots yet. Tap <b>Sell E-Waste</b> to sell your first lot.</div>`;
+  },
+
   1() { $("vf").innerHTML = `<div class="photo">${photoHTML()}</div>`; },
 
   2() {
@@ -165,6 +181,7 @@ function takePhoto(file) {
   if (file) state.photo = URL.createObjectURL(file);
   go(2);
 }
+$("sellBtn").addEventListener("click", () => go(1));
 $("shutterBtn").addEventListener("click", () => $("camInput").click());
 $("galleryBtn").addEventListener("click", () => $("galInput").click());
 $("camInput").addEventListener("change", (e) => takePhoto(e.target.files[0]));
@@ -181,12 +198,12 @@ $("loc").addEventListener("input", (e) => (state.loc = e.target.value || "Kolhap
 
 function finish() {
   const r = chosen();
-  saveUserTx({ date: fmtDate(), lot: state.lot, material: state.material, kg: state.weight, recycler: r.name.split(" ")[0], status: "Completed" });
+  saveUserTx({ date: fmtDate(), lot: state.lot, material: state.material, kg: state.weight, recycler: r.name.split(" ")[0], amount: Math.round(state.weight * recRate(r)), status: "Completed" });
   go(9);
 }
 $("homeBtn").addEventListener("click", () => {
   Object.assign(state, { photo: null, material: "PCB", weight: 5, cond: "Good", rec: 0, method: "UPI", paid: false, txn: null, lot: null, t0: null });
-  go(1);
+  go(0);
 });
 
-go(1);
+go(0);
