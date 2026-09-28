@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KabadiConnect – E-Waste Intelligence Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo"><i data-i="leaf" data-s="22"></i></div>
+      <div><b>KabadiConnect</b><small>From Informal Collection<br>to Formal Recycling</small></div>
+    </div>
+    <nav class="nav">
+      <a class="active" href="index.html"><i data-i="home"></i>Dashboard</a>
+      <a href="#"><i data-i="box"></i>E-Waste Overview</a>
+      <a href="#"><i data-i="trend"></i>Price Trends</a>
+      <a href="#"><i data-i="users"></i>Collectors &amp; Aggregators</a>
+      <a href="#"><i data-i="factory"></i>Recyclers</a>
+      <a href="#"><i data-i="list"></i>Transactions</a>
+      <a href="#"><i data-i="pin"></i>Traceability</a>
+      <a href="#"><i data-i="chart"></i>Reports &amp; Analytics</a>
+      <a href="#"><i data-i="alert"></i>Alerts &amp; Risk</a>
+      <a href="#"><i data-i="cog"></i>Settings</a>
+      <a class="cta" href="collector.html"><i data-i="camera"></i>Open Collector App</a>
+    </nav>
+    <div class="side-foot">
+      <div class="ring"><i data-i="recycle" data-s="26"></i></div>
+      Cleaner Environment<br>Stronger Communities<br>A Circular Economy
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <label class="select"><i data-i="pin"></i>
+        <select id="city"><option>Kolhapur</option><option>Sangli</option><option>Satara</option><option>Ichalkaranji</option></select>
+      </label>
+      <label class="search"><i data-i="search"></i><input placeholder="Search by material, location, recycler..." id="q"></label>
+      <button class="bell" aria-label="Notifications"><i data-i="bell"></i><em>3</em></button>
+      <div class="officer">
+        <div class="avatar"><i data-i="user"></i></div>
+        <div><b>Govt. Officer</b><small>Maharashtra State</small></div>
+      </div>
+    </header>
+
+    <div class="title-row">
+      <div>
+        <h1>E-WASTE INTELLIGENCE DASHBOARD</h1>
+        <p>Real-time insights for a cleaner and safer tomorrow</p>
+      </div>
+      <div class="chips">
+        <span class="chip"><i data-i="calendar" data-s="15"></i><span id="today"></span></span>
+        <span class="chip"><i data-i="clock" data-s="15"></i><span id="clock"></span></span>
+        <span class="chip live">Live Data</span>
+      </div>
+    </div>
+
+    <section class="kpis">
+      <div class="kpi k1"><div class="ico"><i data-i="recycle"></i></div><span>Total E-Waste Collected</span><strong>12,840 kg</strong><small class="up">↑ 18% <i>vs last month</i></small></div>
+      <div class="kpi k2"><div class="ico"><i data-i="check"></i></div><span>Formal Channelized</span><strong>9,720 kg</strong><small class="up">↑ 22% <i>vs last month</i></small></div>
+      <div class="kpi k3"><div class="ico"><i data-i="recycle"></i></div><span>Recycled</span><strong>8,450 kg</strong><small class="up">↑ 20% <i>vs last month</i></small></div>
+      <div class="kpi k4"><div class="ico"><i data-i="clock"></i></div><span>Pending</span><strong>1,130 kg</strong><small class="down">↓ 12% <i>vs last month</i></small></div>
+      <div class="kpi k5"><div class="ico"><i data-i="users"></i></div><span>Active Collectors</span><strong>248</strong><small class="up">↑ 15% <i>vs last month</i></small></div>
+    </section>
+
+    <section class="row r1">
+      <div class="panel">
+        <div class="ph"><h3>E-Waste Collection Trend</h3>
+          <div class="tabs" id="range"><button class="on" data-d="7">7 Days</button><button data-d="30">30 Days</button><button data-d="90">90 Days</button></div>
+        </div>
+        <div class="chart-box"><canvas id="trend"></canvas></div>
+        <div class="legend">
+          <span><i style="background:#1f9d5b"></i>Total Collected</span>
+          <span><i style="background:#2f80ed"></i>Formal Channelized</span>
+          <span><i style="background:#7b4bd6"></i>Recycled</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3>E-Waste by Material Type</h3></div>
+        <div class="donut-wrap">
+          <div class="chart-box"><canvas id="donut"></canvas></div>
+          <ul class="dl" id="dl"></ul>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3>E-Waste Activity Map</h3></div>
+        <div id="map"></div>
+        <div class="map-legend">
+          <span><i style="background:#1f9d5b"></i>Low</span>
+          <span><i style="background:#f5a623"></i>Medium</span>
+          <span><i style="background:#e0475b"></i>High</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="row r2">
+      <div class="panel">
+        <div class="ph"><h3>Recent Transactions</h3><a href="#">View All →</a></div>
+        <div class="tbl-scroll">
+          <table>
+            <thead><tr><th>Date</th><th>Lot ID</th><th>Material</th><th>Weight (kg)</th><th>Recycler</th><th>Status</th></tr></thead>
+            <tbody id="tx"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3>Price Trends <small style="font-weight:400;color:var(--muted)">(Last 7 Days)</small></h3><a href="#">View All →</a></div>
+        <table>
+          <thead><tr><th>Material</th><th>Current Price (₹/kg)</th><th>Change</th></tr></thead>
+          <tbody id="prices"></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3 style="color:var(--red)">Safety Alerts</h3><a href="#">View All →</a></div>
+        <div class="alert sev-high"><div class="a-ico"><i data-i="alertc" data-s="16"></i></div><div><b>High-Risk Area Detected</b><small>Shiroli (Kolhapur)<br>Battery &amp; PCB activity</small></div><time>27 Sep 2026</time></div>
+        <div class="alert sev-med"><div class="a-ico"><i data-i="alertc" data-s="16"></i></div><div><b>Unusual Transaction Pattern</b><small>KC-2026-0138<br>Large quantity · unknown recycler</small></div><time>26 Sep 2026</time></div>
+        <div class="alert sev-low"><div class="a-ico"><i data-i="alertc" data-s="16"></i></div><div><b>Improper Handling Report</b><small>Rural area · Kolhapur<br>Burning of cables (reported)</small></div><time>24 Sep 2026</time></div>
+      </div>
+    </section>
+
+    <div class="banner">
+      <span style="color:var(--g600)"><i data-i="leaf" data-s="32"></i></span>
+      <div><b>A cleaner environment is a shared responsibility.</b><small>Track · Monitor · Recycle · Build a sustainable future</small></div>
+      <a class="btn" href="#"><i data-i="doc" data-s="16"></i>View Detailed Reports</a>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="data.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

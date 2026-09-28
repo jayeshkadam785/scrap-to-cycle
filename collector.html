@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KabadiConnect – Collector Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="collector.css">
+</head>
+<body>
+
+<header class="page-head">
+  <div class="brand"><span class="logo" id="logo"></span>
+    <div><b>KabadiConnect</b><small>From Informal Collection to Formal Recycling</small></div>
+  </div>
+  <div class="badge"><span id="badgeIco"></span><div><b>Collector Journey</b><small>Simple Steps · Fair Price · Safe Recycling</small></div></div>
+  <a class="dash-link" href="index.html">Govt. Dashboard</a>
+</header>
+
+<ol class="steps" id="steps">
+  <li>Take Photo</li><li>AI → Material</li><li>Enter Weight</li><li>Price Intelligence</li>
+  <li>Find Recyclers</li><li>Select Recycler</li><li>Digital Handover</li><li>Payment</li>
+</ol>
+
+<main class="stage">
+  <div class="phone">
+    <div class="status"><span>9:41</span><span>●●● ▮</span></div>
+
+    <!-- 1 Take photo -->
+    <section class="screen" data-step="1">
+      <div class="bar"><span></span><b>Scan / Take Photo</b><span id="i1"></span></div>
+      <div class="viewfinder" id="vf"></div>
+      <div class="shutter-row">
+        <button class="round" id="galleryBtn" aria-label="Choose from gallery"></button>
+        <button class="shutter" id="shutterBtn" aria-label="Take photo"></button>
+        <button class="round" id="flashBtn" aria-label="Flash"></button>
+      </div>
+      <button class="link" id="sampleBtn">No camera? Use a sample PCB photo</button>
+      <input type="file" id="camInput" accept="image/*" capture="environment" hidden>
+      <input type="file" id="galInput" accept="image/*" hidden>
+    </section>
+
+    <!-- 2 AI analysis -->
+    <section class="screen" data-step="2">
+      <div class="bar"><button class="back" data-back></button><b>AI Analysis</b><span></span></div>
+      <div class="photo detect" id="photo2"></div>
+      <div class="card">
+        <div class="mat-row"><span class="mat-ico" id="m2ico"></span>
+          <div><b id="m2name"></b><div class="conf"><span>Confidence: <b id="m2conf"></b>%</span><div class="meter"><i id="m2bar"></i></div></div></div>
+        </div>
+        <small class="muted">Detected Material</small>
+        <select id="m2sel" aria-label="Change material"></select>
+      </div>
+      <button class="primary" data-next>Next</button>
+    </section>
+
+    <!-- 3 Details -->
+    <section class="screen" data-step="3">
+      <div class="bar"><button class="back" data-back></button><b>Add Details</b><span></span></div>
+      <div class="card mat-row"><span class="mat-ico" id="m3ico"></span>
+        <div><small class="muted">Material</small><b id="m3name" style="display:block"></b><small class="muted">AI Confidence <b id="m3conf" style="color:var(--g600)"></b>%</small></div>
+      </div>
+      <label class="lbl">Weight (kg)</label>
+      <div class="stepper"><button id="wMinus" aria-label="Decrease"></button><b id="wVal">5.0</b><button id="wPlus" aria-label="Increase"></button></div>
+      <label class="lbl">Condition</label>
+      <div class="seg" id="cond"><button class="on">Good</button><button>Fair</button><button>Poor</button></div>
+      <label class="lbl">Location</label>
+      <div class="field"><span id="locIco"></span><input id="loc" value="Kolhapur, Maharashtra"></div>
+      <button class="primary" data-next>Next</button>
+    </section>
+
+    <!-- 4 Price -->
+    <section class="screen" data-step="4">
+      <div class="bar"><button class="back" data-back></button><b>Price Intelligence</b><span></span></div>
+      <div class="card">
+        <div class="mat-row"><span class="mat-ico" id="m4ico"></span>
+          <div><small class="muted">Current Market Price (<span id="m4name"></span>)</small>
+            <div class="big" id="m4range"></div><small class="up" id="m4chg"></small></div>
+        </div>
+        <small class="muted"><span id="m4loc"></span></small>
+      </div>
+      <div class="card">
+        <b>Price Breakdown</b>
+        <div class="kv"><span>External Benchmark</span><b id="p1"></b></div>
+        <div class="kv"><span>Recycler Quotes Avg.</span><b id="p2"></b></div>
+        <div class="kv"><span>Our Transactions Avg.</span><b id="p3"></b></div>
+      </div>
+      <div class="est"><small>Estimated Value (for <span id="m4kg"></span> kg)</small><div class="big" id="m4est"></div></div>
+      <button class="primary" data-next>Find Recyclers</button>
+    </section>
+
+    <!-- 5 Recyclers -->
+    <section class="screen" data-step="5">
+      <div class="bar"><button class="back" data-back></button><b>Recommended Recyclers</b><span></span></div>
+      <div id="recList"></div>
+    </section>
+
+    <!-- 6 Select -->
+    <section class="screen" data-step="6">
+      <div class="bar"><button class="back" data-back></button><b>Select Recycler</b><span></span></div>
+      <div class="card sel">
+        <div class="mat-row"><span class="mat-ico" id="s6ico"></span>
+          <div><b id="s6name"></b><div><span class="tag">Authorized Recycler</span></div><small class="muted" id="s6meta"></small></div>
+          <div class="big right" id="s6rate"></div>
+        </div>
+      </div>
+      <b class="lbl">Why this recycler?</b>
+      <ul class="why">
+        <li><span id="w1"></span>Authorized &amp; verified</li>
+        <li><span id="w2"></span>Pickup available</li>
+        <li><span id="w3"></span>Best price for your material</li>
+      </ul>
+      <button class="primary" data-next>Continue</button>
+    </section>
+
+    <!-- 7 Digital passport -->
+    <section class="screen" data-step="7">
+      <div class="bar"><button class="back" data-back></button><b>E-Waste Digital Passport</b><span></span></div>
+      <div class="card qr"><div id="qrBox"></div><small class="muted">Lot ID</small><b id="lot"></b></div>
+      <div class="card mat-row"><span class="mat-ico" id="m7ico"></span>
+        <div><b id="m7"></b><br><small class="muted" id="m7loc"></small></div>
+      </div>
+      <ul class="timeline" id="tl"></ul>
+      <button class="primary" data-next>Continue to Payment</button>
+    </section>
+
+    <!-- 8 Payment -->
+    <section class="screen" data-step="8">
+      <div class="bar"><button class="back" data-back></button><b>Payment</b><span></span></div>
+      <div id="payBody"></div>
+    </section>
+
+    <!-- 9 Done -->
+    <section class="screen done" data-step="9">
+      <div class="globe" id="globe"></div>
+      <h2>Well Done!</h2>
+      <p>You just contributed to a cleaner and greener tomorrow.</p>
+      <div class="card">
+        <div class="kv"><span>Material Sold</span><b id="d1"></b></div>
+        <div class="kv"><span>Weight</span><b id="d2"></b></div>
+        <div class="kv"><span>You Earned</span><b id="d3" style="color:var(--g600)"></b></div>
+      </div>
+      <p class="small">Your e-waste is now in the formal recycling system!</p>
+      <button class="primary" id="homeBtn">Back to Home</button>
+    </section>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="data.js"></script>
+<script src="collector.js"></script>
+</body>
+</html>
